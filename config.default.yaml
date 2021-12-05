@@ -22,3 +22,6 @@ mysql:
 
 # 前端静态文件目录
 frontendStaticServeDir: /var/www/biliroku-minyami-frontend/build/
+
+# 允许本地Token认证（通过公网部署时建议添加用户后设置为false）
+allowLocalTokenAuth: true

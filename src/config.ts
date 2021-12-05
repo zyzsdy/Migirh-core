@@ -22,13 +22,13 @@ class Config {
     sk: string = ":=]IP@Q0Rm*ebwJRRtx6IdVE|D,HbfN)Da_ep'GY,$T#eaKQ>K|w17TgD4/42ATle<dej)=m-,1Z/Ep5?C,LutC:3P=-]3W)oH={hH@piHVP.TemJqoCVC>}#&0D/";
     dbType: "mysql" | "sqlite" = "sqlite";
     sqlite: SqliteConfig = {
-        "database" : "./coreinfo.sqlitedb.db3"
-    }
+        "database": "./coreinfo.sqlitedb.db3"
+    };
     mysql: MysqlConfig = {
 
-    }
-    frontendStaticServeDir: string = "build/"
-
+    };
+    frontendStaticServeDir: string = "build/";
+    allowLocalTokenAuth: boolean = true;
 
     //读取部分
     static config: Config = null;

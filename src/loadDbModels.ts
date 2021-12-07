@@ -25,7 +25,10 @@ if (config.dbType == "sqlite") {
         port: config.mysql.port,
         username: config.mysql.username,
         password: config.mysql.password,
-        charset: config.mysql.charset
+        charset: config.mysql.charset,
+        entities: entitiesList,
+        synchronize: true,
+        logging: false
     }
 }
 

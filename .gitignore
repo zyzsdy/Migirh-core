@@ -1,6 +1,7 @@
 # This project configs
 config.yaml
 *.db3
+.migirh
 
 # Logs
 logs

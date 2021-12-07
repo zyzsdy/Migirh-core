@@ -1,10 +1,11 @@
+import * as Koa from 'koa';
 import * as Router from 'koa-router';
 
-import UserController from './controllers/UserController'
+import { userList } from './controllers/UserController';
 
 //用户
 let user = new Router();
-user.post('/list', UserController.userList);
+user.post('/list', userList);
 
 //整合所有子路由
 let router = new Router();

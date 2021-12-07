@@ -28,6 +28,7 @@
     "koa-router": "^10.1.1",
     "koa-static": "^5.0.0",
     "koa-websocket": "^6.0.0",
+    "lru-cache": "^6.0.0",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^5.0.2",
     "typeorm": "^0.2.41",
@@ -39,6 +40,7 @@
     "@types/koa-router": "^7.4.4",
     "@types/koa-static": "^4.0.2",
     "@types/koa-websocket": "^5.0.7",
+    "@types/lru-cache": "^5.1.1",
     "@types/node": "^16.11.11",
     "nodemon": "^2.0.15",
     "ts-node": "^10.4.0"

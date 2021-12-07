@@ -1,6 +1,6 @@
-import * as Koa from 'koa'
+import * as Koa from 'koa';
 
-export default async function (ctx: Koa.ParameterizedContext, next: () => Promise<any>) {
+export default async function (ctx: Koa.ParameterizedContext, next: Koa.Next) {
     ctx.set("Access-Control-Allow-Origin", "*");
     ctx.set("X-Powered-By", "Soralive New Backend/1.0.0")
     if (ctx.method.toLowerCase() === "options") {

@@ -6,12 +6,14 @@ import dbConn from './loadDbModels';
 import parseJson from "./parseJson";
 import router from './router'
 import config from './config';
+import sessionCache from "./sessionCache";
+import localAdminToken from "./functions/localAdminToken";
 
 import { wsEntry } from './websocket/WsServer'
 
 
 async function startApp() {
-    const conn = await dbConn;
+    await dbConn;
     const app = websockify(new Koa());
 
     const port: number = config.httpPort;
@@ -19,6 +21,8 @@ async function startApp() {
     const home = serve(config.frontendStaticServeDir);
 
     app.use(home);
+    app.use(sessionCache);
+    app.use(localAdminToken);
     app.use(parseJson);
     app.use(router.routes()).use(router.allowedMethods());
     app.ws.use(wsEntry);

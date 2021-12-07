@@ -16,7 +16,7 @@ Token来源有两种
 
 2. 本地Token认证
 
-程序运行后将会在`.migirh/internalToken.json`中生成随机Token和SecretKey，本地另一程序可以读取该文件直接获得最高权限。该文件格式如下所示：
+程序运行后将会在`.migirh/localAdminToken.json`中生成随机Token和SecretKey，本地另一程序可以读取该文件直接获得最高权限。该文件格式如下所示：
 
 ```json
 {

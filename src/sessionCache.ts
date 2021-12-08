@@ -1,9 +1,10 @@
 import * as Koa from 'koa';
 import * as LRU from 'lru-cache';
+import type { UserSession } from './functions/checkLogin';
 import sleep from './utils/sleep';
 
 class SessionCache {
-    lruCache: LRU<string, object>;
+    lruCache: LRU<string, UserSession>;
     constructor() {
         this.lruCache = new LRU({
             maxAge: 1000 * 60 * 60 * 24
@@ -13,7 +14,7 @@ class SessionCache {
     get(key: string) {
         return this.lruCache.get(key);
     }
-    set(key: string, value: object) {
+    set(key: string, value: UserSession) {
         this.lruCache.set(key, value);
     }
     del(key: string) {

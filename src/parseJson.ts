@@ -19,6 +19,7 @@ export default async function (ctx: Koa.ParameterizedContext, next: Koa.Next) {
         if (ctx.method.toLowerCase() === "post") {
             try{
                 let body = await parsePostData(ctx);
+                ctx.bodyString = body;
                 ctx.jsonRequest = JSON.parse(body);
             } catch (err) {
                 ctx.throw(400, err);

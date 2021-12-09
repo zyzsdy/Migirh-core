@@ -1,5 +1,5 @@
 import * as Koa from 'koa';
-import { hmacSha1 } from 'src/utils/crypt';
+import { hmacSha1 } from '../utils/crypt';
 
 export interface UserSession {
     token: string;

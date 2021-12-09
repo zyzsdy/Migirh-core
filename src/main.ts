@@ -8,6 +8,7 @@ import router from './router'
 import config from './config';
 import sessionCache from "./sessionCache";
 import localAdminToken from "./functions/localAdminToken";
+import basicResponse from './utils/basicResponse';
 
 import { wsEntry } from './websocket/WsServer'
 
@@ -20,12 +21,13 @@ async function startApp() {
 
     const home = serve(config.frontendStaticServeDir);
 
-    app.use(home);
-    app.use(sessionCache);
-    app.use(localAdminToken);
-    app.use(parseJson);
-    app.use(router.routes()).use(router.allowedMethods());
-    app.ws.use(wsEntry);
+    app.use(home); //serve static files
+    app.use(basicResponse); //add ctx simple response methods
+    app.use(sessionCache); //add simple session local cache
+    app.use(localAdminToken); //add localAdminToken save token and sk
+    app.use(parseJson); //add body parser
+    app.use(router.routes()).use(router.allowedMethods()); //add router
+    app.ws.use(wsEntry); //add websocket
     app.listen(port, () => {
         console.log(`HTTP Server is running at port ${port}.`);
     });

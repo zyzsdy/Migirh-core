@@ -4,6 +4,10 @@
 
 调用API时，请将参数组装成json格式，通过`POST`方法发送到API的Endpoint。
 
+完整的URL形如`http://127.0.0.1:46014/api/user/checkLogin`。其中，`http://127.0.0.1:46014/api`称为`apiRoot`。`user/checkLogin`称为`Endpoint`。
+
+在其他的API文档中，将仅列出Endpoint。
+
 > 注意：即使没有任何需要发送的参数，也需要发送json空对象`{}`
 
 除了登录API本身外，大部分API都需要登录，在这种情况下，需要在Header中增加`User-Token`和`X-Auth-Token`来鉴权。

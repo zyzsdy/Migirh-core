@@ -8,13 +8,13 @@
 
 1. 获取全局系统设置
 
-Endpoint: `/api/option/global/get`
+Endpoint: `option/global/get`
 
 Permission: `[None]`
 
 2. 更新全局系统设置
 
-Endpoint: `/api/option/global/update`
+Endpoint: `option/global/update`
 
 Permission: `GlobalOption` on `Global`
 
@@ -24,33 +24,33 @@ Permission: `GlobalOption` on `Global`
 
 面向所有用户的预设 + 个人预设
 
-Endpoint: `/api/option/preset/list`
+Endpoint: `option/preset/list`
 
 Permission: `[None]`
 
 4. 获取预设详情
 
-Endpoint: `/api/option/preset/detail`
+Endpoint: `option/preset/detail`
 
 Permission: `[None]`
 
 5. 新建预设
 
-Endpoint: `/api/option/preset/add`
+Endpoint: `option/preset/add`
 
 Permission: `[None]` if type == `"personal"` \
             `PresetOption` on `Global` else
 
 6. 修改预设
 
-Endpoint: `/api/option/preset/edit`
+Endpoint: `option/preset/edit`
 
 Permission: `[None]` if type == `"personal"` \
             `PresetOption` on `Global` else
 
 7. 删除预设
 
-Endpoint: `/api/option/preset/del`
+Endpoint: `option/preset/del`
 
 Permission: `[None]` if type == `"personal"` \
             `PresetOption` on `Global` else

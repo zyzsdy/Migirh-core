@@ -49,13 +49,13 @@ Example:
 
 1. 角色列表
 
-Endpoint: `/api/role/list`
+Endpoint: `role/list`
 
 Permission: `AuthGrant` on `Global`
 
 2. 添加角色
 
-Endpoint: `/api/role/add`
+Endpoint: `role/add`
 
 Permission: `AuthGrant` on `Global`
 
@@ -63,19 +63,19 @@ Permission: `AuthGrant` on `Global`
 
 会同时查询并显示该角色绑定的权限列表
 
-Endpoint: `/api/role/detail`
+Endpoint: `role/detail`
 
 Permission: `AuthGrant` on `Global`
 
 4. 编辑角色
 
-Endpoint: `/api/role/edit`
+Endpoint: `role/edit`
 
 Permission: `AuthGrant` on `Global`
 
 5. 删除角色
 
-Endpoint: `/api/role/del`
+Endpoint: `role/del`
 
 Permission: `AuthGrant` on `Global`
 
@@ -83,12 +83,12 @@ Permission: `AuthGrant` on `Global`
 
 需要指定绑定的角色ID，已有权限的查找在`显示角色详情`API中。
 
-Endpoint: `/api/auth/add`
+Endpoint: `auth/add`
 
 Permission: `AuthGrant` on `Global`
 
 7. 删除权限
 
-Endpoint: `/api/auth/del`
+Endpoint: `auth/del`
 
 Permission: `AuthGrant` on `Global`

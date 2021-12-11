@@ -46,37 +46,37 @@ MinyamiOptions:
 
 3. 暂停任务
 
-Endpoint: `/api/task/pause`
+Endpoint: `task/pause`
 
 Permission: `TaskOperate` on `Scope`
 
 4. 继续任务
 
-Endpoint: `/api/task/resume`
+Endpoint: `task/resume`
 
 Permission: `TaskOperate` on `Scope`
 
 5. 终止任务
 
-Endpoint: `/api/task/stop`
+Endpoint: `task/stop`
 
 Permission: `TaskOperate` on `Scope`
 
 6. 删除任务
 
-Endpoint: `/api/task/del`
+Endpoint: `task/del`
 
 Permission: `TaskOperate` on `Scope`
 
 7. 任务列表
 
-Endpoint: `/api/task/list`
+Endpoint: `task/list`
 
 Permission: `TaskList` on `Scope`
 
 8. 搜索任务
 
-Endpoint: `/api/task/search`
+Endpoint: `task/search`
 
 Permission: `TaskList` on `Scope`
 
@@ -84,6 +84,6 @@ Permission: `TaskList` on `Scope`
 
 注意本功能使用Nginx的`X-Accel-Redirect`功能，在简单鉴权后将请求重定向至Nginx完成后续下载。所以必须配置好Nginx才能使用。
 
-Endpoint: `/api/task/search`
+Endpoint: `task/search`
 
 Permission: `DownloadFile` on `Scope`

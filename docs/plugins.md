@@ -28,18 +28,18 @@
 
 1. 已安装插件列表
 
-Endpoint: `/api/plugin/list`
+Endpoint: `plugin/list`
 
 Permission: `PluginList` on `Global`
 
 2. 启用插件
 
-Endpoint: `/api/plugin/enable`
+Endpoint: `plugin/enable`
 
 Permission: `PluginOperate` on `Global`
 
 3. 停用插件
 
-Endpoint: `/api/plugin/disable`
+Endpoint: `plugin/disable`
 
 Permission: `PluginOperate` on `Global`

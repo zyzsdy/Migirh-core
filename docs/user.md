@@ -34,13 +34,13 @@ Token来源有两种
 
 1. 用户列表
 
-Endpoint: `/api/user/list`
+Endpoint: `user/list`
 
 Permission: `UserEdit` on `Global`
 
 2. 添加用户
 
-Endpoint: `/api/user/add`
+Endpoint: `user/add`
 
 Permission: `UserEdit` on `Global`
 
@@ -48,13 +48,13 @@ Permission: `UserEdit` on `Global`
 
 可以同时修改用户的密码
 
-Endpoint: `/api/user/edit`
+Endpoint: `user/edit`
 
 Permission: `UserEdit` on `Global`
 
 4. 删除用户
 
-Endpoint: `/api/user/del`
+Endpoint: `user/del`
 
 Permission: `UserEdit` on `Global`
 
@@ -62,25 +62,25 @@ Permission: `UserEdit` on `Global`
 
 只能修改自己的密码，需要验证原密码
 
-Endpoint: `/api/user/repass`
+Endpoint: `user/repass`
 
 Permission: `[None]`
 
 6. 登录
 
-Endpoint: `/api/user/login`
+Endpoint: `user/login`
 
 Permission: `UserLogin` on `Global`
 
 7. 登出
 
-Endpoint: `/api/user/logout`
+Endpoint: `user/logout`
 
 Permission: `[None]`
 
 8. 检查登录状态
 
-Endpoint: `/api/user/checkStatus`
+Endpoint: `user/checkStatus`
 
 Permission: `[None]`
 

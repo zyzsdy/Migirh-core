@@ -6,7 +6,7 @@ export default async function (ctx: Koa.ParameterizedContext, next: Koa.Next) {
     if (ctx.method.toLowerCase() === "options") {
         ctx.status = 204;
         ctx.set("Access-Control-Allow-Method", "POST");
-        ctx.set("Access-Control-Allow-Headers", "Content-Type");
+        ctx.set("Access-Control-Allow-Headers", "Content-Type, User-Token, X-Auth-Token");
     }
 
     if(ctx.is('application/json') === false) {

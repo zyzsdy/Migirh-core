@@ -1,5 +1,5 @@
 import * as Koa from 'koa';
-import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { getRandomToken } from "../utils/crypt";
 import { dirname } from 'path';
 
@@ -9,24 +9,29 @@ export interface LocalAdminToken {
 }
 
 function generateNewLocalToken(): LocalAdminToken  {
-    const token: LocalAdminToken = {
-        token: getRandomToken(),
-        sk: getRandomToken()
-    }
-
-    let tokenJson = JSON.stringify(token);
-
-    console.log("[AdminToken] 写入本地Token。");
-
+    let token: LocalAdminToken;
     const basePath = ".migirh/localAdminToken.json";
     let baseDirName = dirname(basePath);
     if (!existsSync(baseDirName)){
         mkdirSync(baseDirName);
     }
-    writeFileSync(basePath, tokenJson, {
-        encoding: "utf8",
-        flag: "w"
-    });
+
+    if (existsSync(basePath)) {
+        console.log("[AdminToken] 已从文件中读入本地Token。");
+        let localTokenJsonStr = readFileSync(basePath, "utf-8");
+        token = JSON.parse(localTokenJsonStr);
+    } else {
+        console.log("[AdminToken] 生成本地Token并写入。");
+        token = {
+            token: getRandomToken(),
+            sk: getRandomToken()
+        }
+        let tokenJson = JSON.stringify(token);
+        writeFileSync(basePath, tokenJson, {
+            encoding: "utf8",
+            flag: "w"
+        });
+    }
 
     return token;
 }

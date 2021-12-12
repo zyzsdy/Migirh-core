@@ -2,6 +2,7 @@ import * as Koa from 'koa';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { getRandomToken } from "../utils/crypt";
 import { dirname } from 'path';
+import config from '../config';
 
 export interface LocalAdminToken {
     token: string;
@@ -9,7 +10,14 @@ export interface LocalAdminToken {
 }
 
 function generateNewLocalToken(): LocalAdminToken  {
-    let token: LocalAdminToken;
+    let token: LocalAdminToken = {
+        token: null,
+        sk: null
+    };
+
+    if (!config.allowLocalTokenAuth) {
+        return token;
+    }
     const basePath = ".migirh/localAdminToken.json";
     let baseDirName = dirname(basePath);
     if (!existsSync(baseDirName)){

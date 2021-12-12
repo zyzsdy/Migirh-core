@@ -1,5 +1,6 @@
 import * as Koa from 'koa';
 import { hmacSha1 } from '../utils/crypt';
+import config from '../config';
 
 export interface UserSession {
     token: string;
@@ -18,13 +19,14 @@ export async function checkLogin(ctx: Koa.ParameterizedContext) {
         sk: null,
         isLocalAdmin: false
     };
-    if (ctx.localAdminToken.token === userToken) {
+
+    if (config.allowLocalTokenAuth && ctx.localAdminToken.token === userToken) {
         userSession.token = ctx.localAdminToken.token;
         userSession.sk = ctx.localAdminToken.sk;
         userSession.isLocalAdmin = true;
     }
 
-    if (userSession.token == null) {
+    if (userSession.token === null) {
         ctx.status = 401;
         ctx.body = {
             error: 1,

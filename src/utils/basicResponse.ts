@@ -41,6 +41,14 @@ export class BasicResponse {
 
         this.SimpleResponse(401, Object.assign(res, data));
     }
+    Forbidden(data: object = {}) {
+        let res = {
+            error: 1,
+            info: "Cannot access the API."
+        };
+
+        this.SimpleResponse(403, Object.assign(res, data));
+    }
 }
 
 export default async function (ctx: Koa.ParameterizedContext, next: Koa.Next) {

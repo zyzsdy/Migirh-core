@@ -25,3 +25,6 @@ frontendStaticServeDir: /var/www/biliroku-minyami-frontend/build/
 
 # 允许本地Token认证（通过公网部署时建议添加用户后设置为false）
 allowLocalTokenAuth: true
+
+# Snowflake Node Id (0-1023) 如果你看不懂这是什么那么不需要管它，保持默认值就好
+snowflakeNodeId: 42

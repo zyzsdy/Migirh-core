@@ -43,6 +43,8 @@ MinyamiOptions:
 |format       |string    |Output format (Default: ts)
 |slice        |string    |Set a time range then download specified part of the stream. eg. "45:00-53:00"
 |nomerge      |boolean   |Do not merge m3u8 chunks after finished download
+|proxy        |string    |Use the specified HTTP/HTTPS/SOCKS5 proxy. eg. "socks5://127.0.0.1:7890"
+|verbose      |boolean   |Output debug information to log
 
 3. 暂停任务
 

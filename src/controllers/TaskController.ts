@@ -4,8 +4,9 @@ import { CheckAuthScope } from '../functions/checkAuth';
 import { getManager } from 'typeorm';
 import Task from '../models/Task';
 import * as path from 'path';
-import { url } from 'koa-router';
-import { json } from 'stream/consumers';
+import snowflake from '../utils/snowflake';
+import { MinyamiOptions } from '../taskProvider/DownloadTask';
+import taskProvider from 'src/taskProvider/TaskProvider';
 
 interface TaskAddRequest {
     url: string;
@@ -14,17 +15,6 @@ interface TaskAddRequest {
     category?: string;
     description?: string;
     options?: MinyamiOptions
-}
-
-interface MinyamiOptions {
-    threads: number;
-    retries?: number;
-    key?: string;
-    cookies?: string;
-    headers?: string;
-    format?: string;
-    slice?: string;
-    nomerge: boolean
 }
 
 export async function taskAdd(ctx: Koa.ParameterizedContext) {
@@ -41,11 +31,12 @@ export async function taskAdd(ctx: Koa.ParameterizedContext) {
 
     let outputFileName = path.basename(jsonRequest.output);
     let now = new Date();
+    let taskId = await snowflake.next();
 
     //save task to db
     const taskDb = getManager().getRepository(Task);
     const taskItem = taskDb.create({
-        task_id: "d", //TODO: get new snowflake id to fill it.
+        task_id: taskId,
         status: 0,
         is_live: jsonRequest.live ? 1 : 0,
         filename: outputFileName,
@@ -59,6 +50,8 @@ export async function taskAdd(ctx: Koa.ParameterizedContext) {
     });
 
     await taskDb.save(taskItem);
+
+    taskProvider.startTask(taskItem);
 
     ctx.basicResponse.OK();
 }

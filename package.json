@@ -29,6 +29,7 @@
     "koa-static": "^5.0.0",
     "koa-websocket": "^6.0.0",
     "lru-cache": "^6.0.0",
+    "minyami": "^4.4.7",
     "reflect-metadata": "^0.1.13",
     "sqlite3": "^5.0.2",
     "typeorm": "^0.2.41",

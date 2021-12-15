@@ -35,9 +35,9 @@ export default class Task {
     @Column()
     date_update: Date
 
-    @Column("text")
+    @Column("text", {nullable: true})
     download_options: string
 
-    @Column("text")
+    @Column("text", {nullable: true})
     description: string
 }

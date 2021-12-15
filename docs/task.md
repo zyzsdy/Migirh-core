@@ -64,6 +64,12 @@ Endpoint: `task/stop`
 
 Permission: `TaskOperate` on `Scope`
 
+Parameters:
+
+|Name         |Type      |Desc
+|:------------|:---------|:---------------
+|task_id      |string    |待终止任务的task_id
+
 6. 删除任务
 
 Endpoint: `task/del`

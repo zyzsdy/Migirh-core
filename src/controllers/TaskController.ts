@@ -1,4 +1,4 @@
-import * as Koa from 'koa'
+import * as Koa from 'koa';
 import { checkLogin } from '../functions/checkLogin';
 import { CheckAuthScope } from '../functions/checkAuth';
 import { getManager } from 'typeorm';
@@ -6,13 +6,14 @@ import Task from '../models/Task';
 import * as path from 'path';
 import snowflake from '../utils/snowflake';
 import { MinyamiOptions } from '../taskProvider/DownloadTask';
-import taskProvider from 'src/taskProvider/TaskProvider';
+import taskProvider from '../taskProvider/TaskProvider';
+import checkRequest from '../functions/checkRequest';
 
 interface TaskAddRequest {
     url: string;
     live: boolean;
     output: string;
-    category?: string;
+    category: string;
     description?: string;
     options?: MinyamiOptions
 }
@@ -20,6 +21,13 @@ interface TaskAddRequest {
 export async function taskAdd(ctx: Koa.ParameterizedContext) {
     let user = await checkLogin(ctx);
     if (user == null) return;
+
+    if (checkRequest(ctx, {
+        "url": "M3U8 Url cannot be null",
+        "live": "live cannot be null",
+        "output": "output path cannot be null",
+        "category": "category cannot be null"
+    })) return;
 
     let jsonRequest = ctx.jsonRequest as TaskAddRequest;
     let auth = await CheckAuthScope(user, "TaskAdd", jsonRequest.output);
@@ -51,7 +59,39 @@ export async function taskAdd(ctx: Koa.ParameterizedContext) {
 
     await taskDb.save(taskItem);
 
-    taskProvider.startTask(taskItem);
+    await taskProvider.startTask(taskItem);
 
+    ctx.basicResponse.OK();
+}
+
+interface TaskStopRequest {
+    task_id: string;
+}
+
+export async function taskStop(ctx: Koa.ParameterizedContext) {
+    let user = await checkLogin(ctx);
+    if (user == null) return;
+
+    if (checkRequest(ctx, {
+        "task_id": "task_id cannot be null",
+    })) return;
+
+    let jsonRequest = ctx.jsonRequest as TaskStopRequest;
+    let task = taskProvider.getActiveTask(jsonRequest.task_id);
+
+    if (!task) {
+        ctx.basicResponse.BadRequest({ info: `task_id ${jsonRequest.task_id} is not an active task.` });
+        return;
+    }
+
+    let taskScopeOutput = task.outputPath;
+    let auth = await CheckAuthScope(user, "TaskAdd", taskScopeOutput);
+
+    if (!auth) {
+        ctx.basicResponse.Forbidden();
+        return;
+    }
+
+    await task.stop();
     ctx.basicResponse.OK();
 }

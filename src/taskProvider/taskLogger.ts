@@ -7,6 +7,7 @@ export default class TaskLogger {
     logger: Log[];
     isDebugMode: boolean;
     constructor(isDebugMode: boolean = false) {
+        this.logger = [];
         this.isDebugMode = isDebugMode;
     }
 

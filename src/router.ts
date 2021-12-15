@@ -1,6 +1,6 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
-import { taskAdd } from './controllers/TaskController';
+import { taskAdd, taskStop } from './controllers/TaskController';
 
 import { userList, userLoggedCheck } from './controllers/UserController';
 
@@ -12,6 +12,7 @@ user.post('/checkStatus', userLoggedCheck);
 // Task
 let task = new Router();
 task.post('/add', taskAdd);
+task.post('/stop', taskStop);
 
 // Integrate all sub routers
 let router = new Router();

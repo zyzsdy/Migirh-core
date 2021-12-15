@@ -11,9 +11,11 @@ import localAdminToken from "./functions/localAdminToken";
 import basicResponse from './utils/basicResponse';
 
 import { wsEntry } from './websocket/WsServer'
+import envInit from "./functions/envInit";
 
 
 async function startApp() {
+    envInit();
     await dbConn;
     const app = websockify(new Koa());
 

@@ -30,6 +30,7 @@ class Config {
     frontendStaticServeDir: string = "build/";
     allowLocalTokenAuth: boolean = true;
     snowflakeNodeId: number = 42;
+    tempDir: string = null;
 
     //读取部分
     static config: Config = null;

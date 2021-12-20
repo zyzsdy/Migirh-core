@@ -19,7 +19,9 @@
 
 返回值也为json格式。
 
-任何API都会返回`error`和`info`两个值。其中`error`表示该API调用中是否发生了错误，以及错误的基本类型。`info`表示应当显示给用户的信息。
+任何API都会返回`error`和`info`、`info_args`三个值。其中`error`表示该API调用中是否发生了错误，以及错误的基本类型。`info`表示应当显示给用户的信息。
+
+`info_args`为`info`中存在需要插值的内容时的插值。当无需`info_args`时，会返回空对象。
 
 error 值与含义的对照表
 

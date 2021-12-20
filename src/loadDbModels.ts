@@ -3,9 +3,10 @@ import { MysqlConnectionOptions } from "typeorm/driver/mysql/MysqlConnectionOpti
 import { SqliteConnectionOptions } from "typeorm/driver/sqlite/SqliteConnectionOptions";
 import config from './config';
 
-import Task from './models/Task'
+import Task from './models/Task';
+import SystemConfig from './models/SystemConfig';
 
-let entitiesList = [Task];
+let entitiesList = [Task, SystemConfig];
 
 let dbConnConfig: MysqlConnectionOptions | SqliteConnectionOptions;
 

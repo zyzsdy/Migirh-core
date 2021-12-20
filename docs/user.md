@@ -77,20 +77,3 @@ Permission: `UserLogin` on `Global`
 Endpoint: `user/logout`
 
 Permission: `[None]`
-
-8. 检查登录状态
-
-Endpoint: `user/checkStatus`
-
-Permission: `[None]`
-
-Parameters:
-
-None
-
-Returns:
-
-|Name         |Type      |Desc
-|:------------|:---------|:---------------
-|error        |number    |0-Logging in 1-Not logged in
-|info         |string    |Extra information

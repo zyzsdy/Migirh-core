@@ -29,5 +29,5 @@ allowLocalTokenAuth: true
 # Snowflake Node Id (0-1023) 如果你看不懂这是什么那么不需要管它，保持默认值就好
 snowflakeNodeId: 42
 
-# 缓存目录 （设置为null表示默认，此时系统不会额外设置临时目录）
-tempDir: null
+# 默认界面语言
+defaultLang: en

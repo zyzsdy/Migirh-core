@@ -15,8 +15,8 @@ import envInit from "./functions/envInit";
 
 
 async function startApp() {
-    envInit();
     await dbConn;
+    envInit();
     const app = websockify(new Koa());
 
     const port: number = config.httpPort;

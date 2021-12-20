@@ -10,13 +10,13 @@
 
 填写一个字符串，可能是URL，比如B站直播间地址。也可能是Minyami Chrome Extension生成的命令，Migirh-core或是已安装的插件将智能处理这个字符串并打开新建任务窗口。
 
-Endpoint: `/api/task/input`
+Endpoint: `task/input`
 
 Permission: `TaskInput` on `Global`
 
 2. 新建任务
 
-Endpoint: `/api/task/add`
+Endpoint: `task/add`
 
 Permission: `TaskAdd` on `Scope`
 

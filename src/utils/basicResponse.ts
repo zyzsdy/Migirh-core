@@ -12,7 +12,8 @@ export class BasicResponse {
     OK(data: object = {}) {
         let res = {
             error: 0,
-            info: "ok"
+            info: "ok",
+            info_args: {}
         };
 
         this.SimpleResponse(200, Object.assign(res, data));
@@ -20,7 +21,8 @@ export class BasicResponse {
     Accepted(data: object = {}) {
         let res = {
             error: 0,
-            info: "ok"
+            info: "ok",
+            info_args: {}
         };
 
         this.SimpleResponse(202, Object.assign(res, data));
@@ -28,7 +30,8 @@ export class BasicResponse {
     BadRequest(data: object = {}) {
         let res = {
             error: 3,
-            info: "Bad Request"
+            info: "Bad Request",
+            info_args: {}
         };
 
         this.SimpleResponse(400, Object.assign(res, data));
@@ -36,7 +39,8 @@ export class BasicResponse {
     Unauthorized(data: object = {}) {
         let res = {
             error: 1,
-            info: "Auth error"
+            info: "Auth error",
+            info_args: {}
         };
 
         this.SimpleResponse(401, Object.assign(res, data));
@@ -44,7 +48,8 @@ export class BasicResponse {
     Forbidden(data: object = {}) {
         let res = {
             error: 1,
-            info: "Cannot access the API."
+            info: "Cannot access the API.",
+            info_args: {}
         };
 
         this.SimpleResponse(403, Object.assign(res, data));

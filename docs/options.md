@@ -1,4 +1,4 @@
-## 系统设置
+## [Deprecation]系统设置
 
 全局系统设置：指整个Migirh-core系统基本设置，需要`GlobalOption`权限才可修改。
 

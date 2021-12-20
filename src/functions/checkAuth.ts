@@ -25,7 +25,7 @@ export type ScopeAuthType = "TaskAdd" | "TaskOperate" | "TaskList" | "DownloadFi
 
 export type AuthType = GlobalAuthType | ScopeAuthType;
 
-export function CheckAuthGlobal(user: UserSession, authType: GlobalAuthType) {
+export async function CheckAuthGlobal(user: UserSession, authType: GlobalAuthType) {
     if (user.isLocalAdmin) return true;
 
     return false;

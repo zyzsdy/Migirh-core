@@ -11,7 +11,7 @@ async function initEnvTmpDir() {
     const systemConfigDb = getManager().getRepository(SystemConfig);
     let tmpPath = await systemConfigDb.findOne("minyami_tmp_path");
 
-    if (tmpPath.config_value) {
+    if (tmpPath && tmpPath.config_value) {
         let platform = os.platform();
         if (platform === "win32") {
             console.log("SET TEMP=" + tmpPath.config_value);

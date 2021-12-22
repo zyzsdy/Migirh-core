@@ -1,9 +1,11 @@
 import * as Koa from 'koa';
 import * as Router from 'koa-router';
-import { taskAdd, taskStop } from './controllers/TaskController';
 
 import { userList } from './controllers/UserController';
 import { systemInit, getSystemConfig, updateSystemConfig } from './controllers/SystemController';
+import { taskPre } from './controllers/task/taskPreController';
+import { taskAdd, taskStop } from './controllers/task/taskAddController';
+import { taskNow } from './controllers/task/taskNowController';
 
 // User
 let user = new Router();
@@ -13,6 +15,8 @@ user.post('/list', userList);
 let task = new Router();
 task.post('/add', taskAdd);
 task.post('/stop', taskStop);
+task.post('/preadd', taskPre);
+task.post('/now', taskNow);
 
 // System
 let system = new Router();

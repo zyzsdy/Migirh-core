@@ -21,6 +21,7 @@ export async function checkLogin(ctx: Koa.ParameterizedContext) {
     };
 
     if (config.allowLocalTokenAuth && ctx.localAdminToken.token === userToken) {
+        userSession.username = "SYSTEM";
         userSession.token = ctx.localAdminToken.token;
         userSession.sk = ctx.localAdminToken.sk;
         userSession.isLocalAdmin = true;

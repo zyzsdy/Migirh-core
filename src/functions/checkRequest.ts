@@ -9,7 +9,10 @@ export default function checkRequest(ctx: Koa.ParameterizedContext, options: {[p
     for (let pName in options) {
         if (checkNullOrEmpty(ctx.jsonRequest, pName)) {
             ctx.basicResponse.BadRequest({
-                info: options[pName]
+                info: "ParameterRequired",
+                info_args: {
+                    para: options[pName]
+                }
             });
             return true;
         }

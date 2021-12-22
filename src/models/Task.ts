@@ -6,7 +6,7 @@ export default class Task {
     task_id: string
 
     /**
-     * 0-Default 1-Downloading 2-Paused 3-Merging 4-Completed 5-Error
+     * 0-Init 1-Downloading 2-Paused 3-Merging 4-Completed 5-Error
      */
     @Column("int")
     status: number

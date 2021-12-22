@@ -1,13 +1,14 @@
 import * as Koa from 'koa';
-import { checkLogin } from '../functions/checkLogin';
-import { CheckAuthScope } from '../functions/checkAuth';
+import { checkLogin } from '../../functions/checkLogin';
+import { CheckAuthScope } from '../../functions/checkAuth';
 import { getManager } from 'typeorm';
-import Task from '../models/Task';
+import Task from '../../models/Task';
 import * as path from 'path';
-import snowflake from '../utils/snowflake';
-import { MinyamiOptions } from '../taskProvider/DownloadTask';
-import taskProvider from '../taskProvider/TaskProvider';
-import checkRequest from '../functions/checkRequest';
+import snowflake from '../../utils/snowflake';
+import { MinyamiOptions } from '../../taskProvider/DownloadTask';
+import taskProvider from '../../taskProvider/TaskProvider';
+import checkRequest from '../../functions/checkRequest';
+import UserCache from '../../models/UserCache';
 
 interface TaskAddRequest {
     url: string;
@@ -23,10 +24,10 @@ export async function taskAdd(ctx: Koa.ParameterizedContext) {
     if (user == null) return;
 
     if (checkRequest(ctx, {
-        "url": "M3U8 Url cannot be null",
-        "live": "live cannot be null",
-        "output": "output path cannot be null",
-        "category": "category cannot be null"
+        "url": "M3U8 Url",
+        "live": "live",
+        "output": "output",
+        "category": "category"
     })) return;
 
     let jsonRequest = ctx.jsonRequest as TaskAddRequest;
@@ -40,6 +41,20 @@ export async function taskAdd(ctx: Koa.ParameterizedContext) {
     let outputFileName = path.basename(jsonRequest.output);
     let now = new Date();
     let taskId = await snowflake.next();
+
+    //save usercache
+    let userCache = {
+        output: path.dirname(jsonRequest.output),
+        live: jsonRequest.live,
+        category: jsonRequest.category
+    };
+    const userCacheDb = getManager().getRepository(UserCache);
+    const userCacheItem = userCacheDb.create({
+        username: user.username,
+        config_key: "task_options",
+        config_value: JSON.stringify(userCache)
+    });
+    await userCacheDb.save(userCacheItem);
 
     //save task to db
     const taskDb = getManager().getRepository(Task);

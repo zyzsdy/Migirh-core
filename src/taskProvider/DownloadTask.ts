@@ -42,6 +42,7 @@ export class DownloadTask {
     category: string;
     options: MinyamiOptions;
     description: string;
+    dateCreate: Date;
 
     downloader: ArchiveDownloader | LiveDownloader;
     finishedChunksCount: number;
@@ -63,6 +64,7 @@ export class DownloadTask {
         this.sourceUrl = task.source_url;
         this.category = task.category;
         this.description = task.description;
+        this.dateCreate = task.date_create;
         this.options = JSON.parse(task.download_options) as MinyamiOptions || {};
 
         this.downloader = null;

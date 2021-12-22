@@ -14,7 +14,48 @@ Endpoint: `task/input`
 
 Permission: `TaskInput` on `Global`
 
-2. 新建任务
+2. 预新建任务
+
+在直接单击页面上的“新建任务”按钮时，从系统中读取上一次用户配置以方便用户使用。
+
+Endpoint: `task/preadd`
+
+Permission: `TaskInput` on `Global`
+
+Parameters: 无
+
+Returns:
+
+Returns:
+
+|Name         |Type          |Desc
+|:------------|:-------------|:---------------
+|error        |number        |0-Ok
+|info         |string        |Extra information
+|info_args    |object        |Supplement of extra information
+|cache        |PreaddCache   |用户缓存
+
+- PreaddCache:
+    |Name         |Type      |Desc
+    |:------------|:---------|:---------------
+    |url          |string    |待下载的m3u8地址
+    |live         |boolean   |是否为直播
+    |output       |string    |保存路径（服务器远程路径，所在目录必须为有权限的Scope）
+    |category     |string    |分类
+    |description  |string    |描述（或备注）
+    |threads      |number    |Threads limit (Default: 5)
+    |retries      |number    |Retry limit
+    |key          |string    |Key for decrypt video
+    |cookies      |string    |Cookies used to download
+    |headers      |string    |Custom header used to download
+    |format       |string    |Output format (Default: ts)
+    |slice        |string    |Set a time range then download specified part of the stream. eg. "45:00-53:00"
+    |nomerge      |boolean   |Do not merge m3u8 chunks after finished download
+    |proxy        |string    |Use the specified HTTP/HTTPS/SOCKS5 proxy. eg. "socks5://127.0.0.1:7890"
+    |verbose      |boolean   |Output debug information to log
+
+
+3. 新建任务
 
 Endpoint: `task/add`
 
@@ -46,19 +87,19 @@ MinyamiOptions:
 |proxy        |string    |Use the specified HTTP/HTTPS/SOCKS5 proxy. eg. "socks5://127.0.0.1:7890"
 |verbose      |boolean   |Output debug information to log
 
-3. 暂停任务
+4. 暂停任务
 
 Endpoint: `task/pause`
 
 Permission: `TaskOperate` on `Scope`
 
-4. 继续任务
+5. 继续任务
 
 Endpoint: `task/resume`
 
 Permission: `TaskOperate` on `Scope`
 
-5. 终止任务
+6. 终止任务
 
 Endpoint: `task/stop`
 
@@ -70,25 +111,55 @@ Parameters:
 |:------------|:---------|:---------------
 |task_id      |string    |待终止任务的task_id
 
-6. 删除任务
+7. 删除任务
 
 Endpoint: `task/del`
 
 Permission: `TaskOperate` on `Scope`
 
-7. 任务列表
+8. 任务列表
 
 Endpoint: `task/list`
 
 Permission: `TaskList` on `Scope`
 
-8. 搜索任务
+9. 正在进行中的任务列表
 
-Endpoint: `task/search`
+Endpoint: `task/now`
 
 Permission: `TaskList` on `Scope`
 
-9. 下载完成后的文件
+Parameters: 无
+
+Returns:
+
+|Name         |Type          |Desc
+|:------------|:-------------|:---------------
+|error        |number        |0-Ok
+|info         |string        |Extra information
+|info_args    |object        |Supplement of extra information
+|data         |TaskInfo[]    |任务信息
+
+- TaskInfo:
+    |Name         |Type      |Desc
+    |:------------|:---------|:---------------
+    |task_id      |string    |任务ID
+    |status       |number    |下载状态（0-Init 1-Downloading 2-Paused 3-Merging 4-Completed 5-Error）
+    |is_live      |boolean   |是否为直播
+    |filename     |string    |任务名称
+    |output_path  |string    |保存路径
+    |source_url   |string    |M3U8 URL
+    |category     |string    |分类
+    |date_create  |Date      |创建时间
+    |date_update  |Date      |最后更新时间
+    |description  |string    |描述
+    |finished_chunk_count|number|已完成的区块数
+    |total_chunk_count|number|总区块数
+    |chunk_speed  |string    |区块速度
+    |ratio_speed  |string    |比例速度
+    |eta          |string    |剩余完成时间
+
+10. 下载完成后的文件
 
 注意本功能使用Nginx的`X-Accel-Redirect`功能，在简单鉴权后将请求重定向至Nginx完成后续下载。所以必须配置好Nginx才能使用。
 

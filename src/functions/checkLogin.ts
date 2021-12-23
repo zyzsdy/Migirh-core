@@ -83,3 +83,17 @@ export async function checkLogin(ctx: Koa.ParameterizedContext) {
 
     return userSession;
 }
+
+export async function getSession(ctx: Koa.ParameterizedContext, token: string) {
+    if (config.allowLocalTokenAuth && ctx.localAdminToken.token === token) {
+        let user: UserSession = {
+            token,
+            username: "SYSTEM",
+            sk: ctx.localAdminToken.sk,
+            isLocalAdmin: true
+        }
+        return user;
+    }
+
+    return null;
+}

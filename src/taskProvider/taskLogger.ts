@@ -1,4 +1,4 @@
-interface Log {
+export interface Log {
     type: "debug" | "info" | "warning" | "error";
     message: string;
 }

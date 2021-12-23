@@ -5,6 +5,7 @@ import Task from "../models/Task";
 import TaskLogger from "./taskLogger";
 import type { TaskProvider } from "./TaskProvider";
 import taskProvider from "./TaskProvider";
+import { wsServer } from "../websocket/WsServer";
 
 export interface MinyamiOptions {
     threads?: number;
@@ -111,12 +112,11 @@ export class DownloadTask {
                 this.ratioSpeed = currentChunkInfo.ratioSpeed;
                 this.eta = currentChunkInfo.eta;
 
+                let loggerLine: string;
                 if (this.isLive) {
-                    this.logger.info(
-                        `Processing ${this.filename} finished. (${currentChunkInfo.finishedChunksCount} chunks downloaded | Avg Speed: ${currentChunkInfo.chunkSpeed} chunks/s or ${currentChunkInfo.ratioSpeed}x)`
-                    );
+                    loggerLine = `Processing ${this.filename} finished. (${currentChunkInfo.finishedChunksCount} chunks downloaded | Avg Speed: ${currentChunkInfo.chunkSpeed} chunks/s or ${currentChunkInfo.ratioSpeed}x)`;
                 } else {
-                    this.logger.info(
+                    loggerLine = 
                         `Processing ${this.filename} finished. (${currentChunkInfo.finishedChunksCount} / ${
                             this.totalChunksCount
                         } or ${(
@@ -124,58 +124,135 @@ export class DownloadTask {
                             100
                         ).toFixed(2)}% | Avg Speed: ${currentChunkInfo.chunkSpeed} chunks/s or ${
                             currentChunkInfo.ratioSpeed
-                        }x | ETA: ${currentChunkInfo.eta})`
-                    );
+                        }x | ETA: ${currentChunkInfo.eta})`;
                 }
+                if (loggerLine) this.logger.info(loggerLine);
+
+                wsServer.sendAll({
+                    cmd: 4,
+                    subCmd: 1,
+                    task_id: this.taskId,
+                    log: {
+                        type: "info",
+                        message: loggerLine
+                    },
+                    data: {
+                        finishedChunksCount: currentChunkInfo.finishedChunksCount,
+                        totalChunksCount: currentChunkInfo.totalChunksCount,
+                        chunkSpeed: currentChunkInfo.chunkSpeed,
+                        ratioSpeed: currentChunkInfo.ratioSpeed,
+                        eta: currentChunkInfo.eta
+                    }
+                });
             });
             this.downloader.on("chunk-error", (error: Error) => {
-                this.logger.warning(`Processing ${this.filename} failed: ${error.message}`);
+                let loggerLine = `Processing ${this.filename} failed: ${error.message}`;
+                this.logger.warning(loggerLine);
+                wsServer.sendAll({
+                    cmd: 4,
+                    subCmd: 0,
+                    task_id: this.taskId,
+                    log: {
+                        type: "warning",
+                        message: loggerLine
+                    }
+                });
             });
             this.downloader.on("downloaded", async () => {
                 this.status = 3;
 
+                let loggerLine: string;
                 if (this.options.nomerge) {
-                    this.logger.info("Skip merging. Please merge video chunks manually.");
+                    loggerLine ="Skip merging. Please merge video chunks manually.";
                 } else {
-                    this.logger.info(`${this.finishedChunksCount} chunks downloaded. Start merging chunks.`);
+                    loggerLine = `${this.finishedChunksCount} chunks downloaded. Start merging chunks.`;
                 }
+                if (loggerLine) this.logger.info(loggerLine);
 
                 //update db
                 await getConnection().createQueryBuilder()
                     .update(Task).set({ status: 3, date_update: new Date()}).where("task_id=:id", {id: this.taskId}).execute();
+
+                wsServer.sendAll({
+                    cmd: 4,
+                    subCmd: 2,
+                    task_id: this.taskId,
+                    newStatus: 3,
+                    log: {
+                        type: "info",
+                        message: loggerLine
+                    }
+                });
             });
             this.downloader.on("finished", async () => {
                 this.status = 4;
 
-                this.logger.info(`All finished. Check your file at [${path.resolve(this.outputPath)}] .`);
+                let loggerLine = `All finished. Check your file at [${path.resolve(this.outputPath)}] .`;
+
+                this.logger.info(loggerLine);
 
                 //update db
                 await getConnection().createQueryBuilder()
                     .update(Task).set({ status: 4, date_update: new Date()}).where("task_id=:id", {id: this.taskId}).execute();
 
                 this.clean();
+
+                wsServer.sendAll({
+                    cmd: 4,
+                    subCmd: 2,
+                    task_id: this.taskId,
+                    newStatus: 4,
+                    log: {
+                        type: "info",
+                        message: loggerLine
+                    }
+                });
             });
             this.downloader.on("merge-error", async (error?: Error) => {
                 this.status = 5;
 
-                this.logger.error("Fail to merge video. Please merge video chunks manually. " + error?.message ?? "");
+                let loggerLine = "Fail to merge video. Please merge video chunks manually. " + error?.message ?? "";
+                this.logger.error(loggerLine);
 
                 //update db
                 await getConnection().createQueryBuilder()
                     .update(Task).set({ status: 5, date_update: new Date()}).where("task_id=:id", {id: this.taskId}).execute();
 
                 this.clean();
+
+                wsServer.sendAll({
+                    cmd: 4,
+                    subCmd: 2,
+                    task_id: this.taskId,
+                    newStatus: 5,
+                    log: {
+                        type: "error",
+                        message: loggerLine
+                    }
+                });
             });
             this.downloader.on("critical-error", async (error?: Error) => {
                 this.status = 5;
 
-                this.logger.error("Aborted due to critical error. " + error?.message ?? "");
+                let loggerLine = "Aborted due to critical error. " + error?.message ?? "";
+                this.logger.error(loggerLine);
 
                 //update db
                 await getConnection().createQueryBuilder()
                     .update(Task).set({ status: 5, date_update: new Date()}).where("task_id=:id", {id: this.taskId}).execute();
 
                 this.clean();
+
+                wsServer.sendAll({
+                    cmd: 4,
+                    subCmd: 2,
+                    task_id: this.taskId,
+                    newStatus: 5,
+                    log: {
+                        type: "error",
+                        message: loggerLine
+                    }
+                });
             });
 
             if (this.isLive) {
@@ -200,7 +277,14 @@ export class DownloadTask {
                 await getConnection().createQueryBuilder()
                     .update(Task).set({ status: 2, date_update: new Date()}).where("task_id=:id", {id: this.taskId}).execute();
 
-                    this.clean();
+                this.clean();
+
+                wsServer.sendAll({
+                    cmd: 4,
+                    subCmd: 2,
+                    task_id: this.taskId,
+                    newStatus: 2
+                });
             }
         }
     }
@@ -208,13 +292,25 @@ export class DownloadTask {
     async error(error?: Error) {
         this.status = 5;
 
-        this.logger.error("Minyami stopped " + error?.message ?? "");
+        let loggerLine = "Minyami stopped " + error?.message ?? ""
+        this.logger.error(loggerLine);
 
         //update db
         await getConnection().createQueryBuilder()
             .update(Task).set({ status: 5, date_update: new Date()}).where("task_id=:id", {id: this.taskId}).execute();
 
         this.clean();
+
+        wsServer.sendAll({
+            cmd: 4,
+            subCmd: 2,
+            task_id: this.taskId,
+            newStatus: 5,
+            log: {
+                type: "error",
+                message: loggerLine
+            }
+        });
     }
 
     clean() {

@@ -98,6 +98,11 @@ export class DownloadTask {
                     cliMode: false
                 });
             } else {
+                console.log({
+                    ...this.options,
+                    output: this.outputPath,
+                    cliMode: false
+                });
                 this.downloader = new ArchiveDownloader(this.sourceUrl, {
                     ...this.options,
                     output: this.outputPath,
@@ -255,7 +260,7 @@ export class DownloadTask {
                 });
             });
 
-            if (this.isLive) {
+            if (!this.isLive) {
                 await this.downloader.init();
             }
 

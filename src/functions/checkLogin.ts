@@ -1,6 +1,7 @@
 import * as Koa from 'koa';
 import { hmacSha1 } from '../utils/crypt';
 import config from '../config';
+import localAdminToken from './localAdminToken';
 
 export interface UserSession {
     token: string;
@@ -20,10 +21,10 @@ export async function checkLogin(ctx: Koa.ParameterizedContext) {
         isLocalAdmin: false
     };
 
-    if (config.allowLocalTokenAuth && ctx.localAdminToken.token === userToken) {
+    if (config.allowLocalTokenAuth && localAdminToken.token === userToken) {
         userSession.username = "SYSTEM";
-        userSession.token = ctx.localAdminToken.token;
-        userSession.sk = ctx.localAdminToken.sk;
+        userSession.token = localAdminToken.token;
+        userSession.sk = localAdminToken.sk;
         userSession.isLocalAdmin = true;
     }
 
@@ -84,12 +85,12 @@ export async function checkLogin(ctx: Koa.ParameterizedContext) {
     return userSession;
 }
 
-export async function getSession(ctx: Koa.ParameterizedContext, token: string) {
-    if (config.allowLocalTokenAuth && ctx.localAdminToken.token === token) {
+export async function getSession(token: string) {
+    if (config.allowLocalTokenAuth && localAdminToken.token === token) {
         let user: UserSession = {
             token,
             username: "SYSTEM",
-            sk: ctx.localAdminToken.sk,
+            sk: localAdminToken.sk,
             isLocalAdmin: true
         }
         return user;

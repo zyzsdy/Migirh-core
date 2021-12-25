@@ -25,7 +25,6 @@ export async function taskAdd(ctx: Koa.ParameterizedContext) {
 
     if (checkRequest(ctx, {
         "url": "M3U8 Url",
-        "live": "live",
         "output": "output",
         "category": "category"
     })) return;

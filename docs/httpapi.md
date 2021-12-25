@@ -31,3 +31,4 @@ error 值与含义的对照表
 | 1                | Auth error
 | 2                | DB error
 | 3                | Request format error
+| 4                | Server error

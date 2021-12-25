@@ -73,6 +73,7 @@ async function cleanOnTime() {
 }
 
 export async function wsEntry(ctx: Koa.ParameterizedContext) {
+    console.log("websocket established.");
     tempCtxs.push(ctx);
 
     ctx.wsStatus = {
@@ -96,7 +97,7 @@ export async function wsEntry(ctx: Koa.ParameterizedContext) {
             case 1:
                 {
                     //auth
-                    let user = await getSession(ctx, message.token);
+                    let user = await getSession(message.token);
 
                     if (user === null) {
                         wsServer.sendJson(ctx, {
@@ -126,6 +127,7 @@ export async function wsEntry(ctx: Koa.ParameterizedContext) {
                 }
             case 2:
                 {
+                    ctx.wsStatus.lastTimestamp = Date.now();
                     wsServer.sendJson(ctx, {
                         cmd: 2
                     });
@@ -137,6 +139,7 @@ export async function wsEntry(ctx: Koa.ParameterizedContext) {
     });
 
     ctx.websocket.on("close", async () => {
+        console.log("websocket closed.");
         cleanwsctx(ctx);
     });
 }

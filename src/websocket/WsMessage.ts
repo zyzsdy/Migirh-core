@@ -104,8 +104,8 @@ interface NewLogServerMessage extends RefreshPartServerMessageBase {
  *     "data": {
  *         "finishedChunksCount": 5,
  *         "totalChunksCount": 500,
- *         "chunkSpeed": 6.12,
- *         "ratioSpeed": 1.01,
+ *         "chunkSpeed": "6.12",
+ *         "ratioSpeed": "1.01",
  *         "eta": "04:12:30"
  *     },
  *     "log": {

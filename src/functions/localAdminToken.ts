@@ -45,7 +45,4 @@ function generateNewLocalToken(): LocalAdminToken  {
 }
 
 const localAdminToken = generateNewLocalToken();
-export default async function (ctx: Koa.ParameterizedContext, next: Koa.Next) {
-    ctx.localAdminToken = localAdminToken
-    await next();
-};
+export default localAdminToken;

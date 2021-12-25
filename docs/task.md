@@ -14,6 +14,21 @@ Endpoint: `task/input`
 
 Permission: `TaskInput` on `Global`
 
+Parameters:
+
+|Name         |Type          |Desc
+|:------------|:-------------|:---------------
+|content      |string        |待处理的字符串
+
+Returns:
+
+|Name         |Type          |Desc
+|:------------|:-------------|:---------------
+|error        |number        |0-Ok
+|info         |string        |Extra information
+|info_args    |object        |Supplement of extra information
+|result       |PreaddInfo[]  |分析结果
+
 2. 预新建任务
 
 在直接单击页面上的“新建任务”按钮时，从系统中读取上一次用户配置以方便用户使用。
@@ -26,16 +41,14 @@ Parameters: 无
 
 Returns:
 
-Returns:
-
 |Name         |Type          |Desc
 |:------------|:-------------|:---------------
 |error        |number        |0-Ok
 |info         |string        |Extra information
 |info_args    |object        |Supplement of extra information
-|cache        |PreaddCache   |用户缓存
+|cache        |PreaddInfo    |用户缓存
 
-- PreaddCache:
+- PreaddInfo:
     |Name         |Type      |Desc
     |:------------|:---------|:---------------
     |url          |string    |待下载的m3u8地址

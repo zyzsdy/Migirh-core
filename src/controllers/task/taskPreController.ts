@@ -5,7 +5,7 @@ import { getManager } from 'typeorm';
 import SystemConfig from '../../models/SystemConfig';
 import UserCache from '../../models/UserCache';
 
-interface NewTaskParams {
+export interface NewTaskParams {
     url?: string;
     live?: boolean;
     output?: string;
@@ -44,17 +44,7 @@ interface UserCacheOptions {
     category?: string;
 }
 
-export async function taskPre(ctx: Koa.ParameterizedContext) {
-    let user = await checkLogin(ctx);
-    if (user == null) return;
-
-    let auth = await CheckAuthGlobal(user, "TaskInput");
-
-    if (!auth) {
-        ctx.basicResponse.Forbidden();
-        return;
-    }
-
+export async function getNewTaskPreaddParams(username: string) : Promise<NewTaskParams> {
     let result: NewTaskParams = {};
 
     //read minyamioptions and proxy
@@ -83,13 +73,29 @@ export async function taskPre(ctx: Koa.ParameterizedContext) {
 
     //read usercache
     const userCacheDb = getManager().getRepository(UserCache);
-    let userCacheOptionsItem = await userCacheDb.findOne({"username": user.username, "config_key": "task_options"});
+    let userCacheOptionsItem = await userCacheDb.findOne({"username": username, "config_key": "task_options"});
     if (userCacheOptionsItem) {
         let userCacheOptions = JSON.parse(userCacheOptionsItem.config_value) as UserCacheOptions
         if (userCacheOptions.live) result.live = userCacheOptions.live;
         if (userCacheOptions.output) result.output = userCacheOptions.output;
         if (userCacheOptions.category) result.category = userCacheOptions.category;
     }
+
+    return result;
+}
+
+export async function taskPre(ctx: Koa.ParameterizedContext) {
+    let user = await checkLogin(ctx);
+    if (user == null) return;
+
+    let auth = await CheckAuthGlobal(user, "TaskInput");
+
+    if (!auth) {
+        ctx.basicResponse.Forbidden();
+        return;
+    }
+
+    let result = await getNewTaskPreaddParams(user.username);
 
     ctx.basicResponse.OK({
         cache: result

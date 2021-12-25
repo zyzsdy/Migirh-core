@@ -6,6 +6,7 @@ import { systemInit, getSystemConfig, updateSystemConfig } from './controllers/S
 import { taskPre } from './controllers/task/taskPreController';
 import { taskAdd, taskStop } from './controllers/task/taskAddController';
 import { taskNow } from './controllers/task/taskNowController';
+import { taskInput } from './controllers/task/taskInputController';
 
 // User
 let user = new Router();
@@ -17,6 +18,7 @@ task.post('/add', taskAdd);
 task.post('/stop', taskStop);
 task.post('/preadd', taskPre);
 task.post('/now', taskNow);
+task.post('/input', taskInput);
 
 // System
 let system = new Router();

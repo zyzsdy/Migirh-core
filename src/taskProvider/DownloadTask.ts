@@ -21,6 +21,7 @@ export interface MinyamiOptions {
 }
 
 interface ChunkDownloadedArgs {
+    taskname: string;
     finishedChunksCount: number;
     totalChunksCount: number;
     chunkSpeed: string;
@@ -119,10 +120,10 @@ export class DownloadTask {
 
                 let loggerLine: string;
                 if (this.isLive) {
-                    loggerLine = `Processing ${this.filename} finished. (${currentChunkInfo.finishedChunksCount} chunks downloaded | Avg Speed: ${currentChunkInfo.chunkSpeed} chunks/s or ${currentChunkInfo.ratioSpeed}x)`;
+                    loggerLine = `Processing ${currentChunkInfo.taskname} finished. (${currentChunkInfo.finishedChunksCount} chunks downloaded | Avg Speed: ${currentChunkInfo.chunkSpeed} chunks/s or ${currentChunkInfo.ratioSpeed}x)`;
                 } else {
                     loggerLine = 
-                        `Processing ${this.filename} finished. (${currentChunkInfo.finishedChunksCount} / ${
+                        `Processing ${currentChunkInfo.taskname} finished. (${currentChunkInfo.finishedChunksCount} / ${
                             this.totalChunksCount
                         } or ${(
                             (currentChunkInfo.finishedChunksCount / currentChunkInfo.totalChunksCount) *

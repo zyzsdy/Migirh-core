@@ -78,6 +78,10 @@ export class DownloadTask {
         
         this.logger = new TaskLogger(this.options.verbose);
         this.taskProvider = taskProvider;
+
+        wsServer.sendAll({
+            cmd: 3
+        });
     }
     async start() {
         try {

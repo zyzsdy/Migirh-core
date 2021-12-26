@@ -34,8 +34,11 @@ export async function taskInput(ctx: Koa.ParameterizedContext) {
 
             ctx.basicResponse.OK({
                 result: [{
-                    ...preaddParams,
-                    url: jsonRequest.content
+                    label: "m3u8",
+                    info: {
+                        ...preaddParams,
+                        url: jsonRequest.content
+                    }
                 }]
             });
             return;
@@ -56,9 +59,13 @@ export async function taskInput(ctx: Koa.ParameterizedContext) {
 
         ctx.basicResponse.OK({
             result: [{
-                ...preaddParams,
-                ...minyamiParams,
-                output
+                label: "minyami command",
+                info: {
+                    ...preaddParams,
+                    ...minyamiParams,
+                    output,
+                    live: minyamiParams.live
+                }
             }]
         });
         return;

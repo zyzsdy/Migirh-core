@@ -27,7 +27,13 @@ Returns:
 |error        |number        |0-Ok
 |info         |string        |Extra information
 |info_args    |object        |Supplement of extra information
-|result       |PreaddInfo[]  |分析结果
+|result       |InputResult[] |分析结果
+
+- InputResult:
+    |Name         |Type          |Desc
+    |:------------|:-------------|:---------------
+    |label        |string        |结果标签
+    |info         |PreaddInfo    |预解析参数
 
 2. 预新建任务
 

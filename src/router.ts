@@ -7,10 +7,16 @@ import { taskPre } from './controllers/task/taskPreController';
 import { taskAdd, taskStop } from './controllers/task/taskAddController';
 import { taskNow } from './controllers/task/taskNowController';
 import { taskInput } from './controllers/task/taskInputController';
+import { addCategory, getCategory } from './controllers/CategoryController';
 
 // User
 let user = new Router();
 user.post('/list', userList);
+
+// Category
+let category = new Router();
+category.post('/add', addCategory);
+category.post('/get', getCategory);
 
 // Task
 let task = new Router();
@@ -28,8 +34,9 @@ system.post('/update_config', updateSystemConfig);
 
 // Integrate all sub routers
 let router = new Router();
-router.use('/task', task.routes(), task.allowedMethods());
 router.use('/user', user.routes(), user.allowedMethods());
+router.use('/category', category.routes(), category.allowedMethods());
+router.use('/task', task.routes(), task.allowedMethods());
 router.use('/system', system.routes(), system.allowedMethods());
 
 let rootRouter = new Router();

@@ -6,8 +6,9 @@ import config from './config';
 import Task from './models/Task';
 import SystemConfig from './models/SystemConfig';
 import UserCache from './models/UserCache';
+import Category from "./models/Category";
 
-let entitiesList = [Task, SystemConfig, UserCache];
+let entitiesList = [Task, SystemConfig, UserCache, Category];
 
 let dbConnConfig: MysqlConnectionOptions | SqliteConnectionOptions;
 

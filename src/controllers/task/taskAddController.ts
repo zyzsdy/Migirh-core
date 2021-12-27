@@ -5,10 +5,10 @@ import { getManager } from 'typeorm';
 import Task from '../../models/Task';
 import * as path from 'path';
 import snowflake from '../../utils/snowflake';
-import { MinyamiOptions } from '../../taskProvider/DownloadTask';
 import taskProvider from '../../taskProvider/TaskProvider';
 import checkRequest from '../../functions/checkRequest';
 import UserCache from '../../models/UserCache';
+import { MinyamiOptions } from '../../taskProvider/MinyamiWorkerMessage';
 
 interface TaskAddRequest {
     url: string;

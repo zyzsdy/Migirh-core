@@ -64,7 +64,6 @@ export async function taskInput(ctx: Koa.ParameterizedContext) {
                     ...preaddParams,
                     ...minyamiParams,
                     output,
-                    live: minyamiParams.live
                 }
             }]
         });

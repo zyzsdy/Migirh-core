@@ -25,3 +25,27 @@ async function initEnvTmpDir() {
         }
     }
 }
+
+export async function getEnvObj() {
+    const systemConfigDb = getManager().getRepository(SystemConfig);
+    let tmpPath = await systemConfigDb.findOne("minyami_tmp_path");
+
+    if (tmpPath && tmpPath.config_value) {
+        let platform = os.platform();
+        if (platform === "win32") {
+            return {
+                TEMP: tmpPath.config_value
+            }
+        } else if (platform === "darwin") {
+            return {
+                TMPDIR: tmpPath.config_value
+            }
+        } else {
+            return {
+                TMP: tmpPath.config_value
+            }
+        }
+    }
+
+    return {};
+}

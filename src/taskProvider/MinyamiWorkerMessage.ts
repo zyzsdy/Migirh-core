@@ -19,7 +19,7 @@ interface TaskInitAction {
 export interface TaskInitOptions {
     isLive: boolean;
     sourceUrl: string;
-    outputPath: string;
+    output: string;
     options: MinyamiOptions
 }
 

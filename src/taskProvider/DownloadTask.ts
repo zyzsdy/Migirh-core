@@ -21,6 +21,7 @@ export class DownloadTask {
     isLive: boolean;
     filename: string;
     outputPath: string;
+    output: string;
     sourceUrl: string;
     category: string;
     options: MinyamiOptions;
@@ -44,6 +45,7 @@ export class DownloadTask {
         this.isLive = task.is_live === 1;
         this.filename = task.filename;
         this.outputPath = task.output_path;
+        this.output = path.join(task.output_path, task.filename);
         this.sourceUrl = task.source_url;
         this.category = task.category;
         this.description = task.description;
@@ -87,7 +89,7 @@ export class DownloadTask {
                 param: {
                     isLive: this.isLive,
                     sourceUrl: this.sourceUrl,
-                    outputPath: this.outputPath,
+                    output: this.output,
                     options: this.options
                 }
             });

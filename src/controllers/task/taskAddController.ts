@@ -14,6 +14,7 @@ interface TaskAddRequest {
     url: string;
     live: boolean;
     output: string;
+    filename: string;
     category: string;
     description?: string;
     options?: MinyamiOptions
@@ -37,13 +38,12 @@ export async function taskAdd(ctx: Koa.ParameterizedContext) {
         return;
     }
 
-    let outputFileName = path.basename(jsonRequest.output);
     let now = new Date();
     let taskId = await snowflake.next();
 
     //save usercache
     let userCache = {
-        output: path.dirname(jsonRequest.output),
+        output: jsonRequest.output,
         live: jsonRequest.live,
         category: jsonRequest.category
     };
@@ -61,7 +61,7 @@ export async function taskAdd(ctx: Koa.ParameterizedContext) {
         task_id: taskId,
         status: 0,
         is_live: jsonRequest.live ? 1 : 0,
-        filename: outputFileName,
+        filename: jsonRequest.filename,
         output_path: jsonRequest.output,
         source_url: jsonRequest.url,
         category: jsonRequest.category,

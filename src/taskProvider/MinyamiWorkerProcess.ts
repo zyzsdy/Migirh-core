@@ -16,18 +16,18 @@ class Minyami {
         if (options.isLive) {
             this.downloader = new LiveDownloader(options.sourceUrl, {
                 ...options.options,
-                output: options.outputPath,
+                output: options.output,
                 cliMode: false
             });
         } else {
             console.log({
                 ...options.options,
-                output: options.outputPath,
+                output: options.output,
                 cliMode: false
             });
             this.downloader = new ArchiveDownloader(options.sourceUrl, {
                 ...options.options,
-                output: options.outputPath,
+                output: options.output,
                 cliMode: false
             });
         }

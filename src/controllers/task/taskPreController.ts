@@ -9,6 +9,7 @@ export interface NewTaskParams {
     url?: string;
     live?: boolean;
     output?: string;
+    filename?: string;
     category?: string;
     description?: string;
     threads?: number;

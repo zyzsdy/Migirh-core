@@ -52,18 +52,12 @@ export async function taskInput(ctx: Koa.ParameterizedContext) {
         let preaddParams = await getNewTaskPreaddParams(user.username);
         let minyamiParams = minyamiCommandParser(jsonRequest.content);
 
-        let output = minyamiParams.output;
-        if (preaddParams.output) {
-            output = path.join(preaddParams.output, minyamiParams.output);
-        }
-
         ctx.basicResponse.OK({
             result: [{
                 label: "minyami command",
                 info: {
                     ...preaddParams,
-                    ...minyamiParams,
-                    output,
+                    ...minyamiParams
                 }
             }]
         });

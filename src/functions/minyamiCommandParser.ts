@@ -3,7 +3,7 @@ import * as yargs from 'yargs-parser';
 interface MinyamiOptions {
     url?: string;
     live?: boolean;
-    output?: string;
+    filename?: string;
     threads?: number;
     retries?: number;
     key?: string;
@@ -26,8 +26,8 @@ export function minyamiCommandParser(command: string): MinyamiOptions {
         if (args['download']) result.url = args['download'];
         if (args['threads']) result.threads = args['threads'];
         if (args['retries']) result.retries = args['retries'];
-        if (args['o']) result.output = args['o'];
-        if (args['output']) result.output = args['output'];
+        if (args['o']) result.filename = args['o'];
+        if (args['output']) result.filename = args['output'];
         if (args['cookies']) result.cookies = args['cookies'];
         if (args['H']) result.headers = args['H'];
         if (args['headers']) result.headers = args['headers'];

@@ -1,9 +1,9 @@
 import * as Koa from 'koa';
 import { checkLogin } from '../../functions/checkLogin';
 import { CheckAuthScope } from '../../functions/checkAuth';
-import { getManager } from 'typeorm';
+import { getConnection, getManager } from 'typeorm';
 import Task from '../../models/Task';
-import * as path from 'path';
+import * as fs from 'fs';
 import snowflake from '../../utils/snowflake';
 import taskProvider from '../../taskProvider/TaskProvider';
 import checkRequest from '../../functions/checkRequest';
@@ -78,7 +78,7 @@ export async function taskAdd(ctx: Koa.ParameterizedContext) {
     ctx.basicResponse.OK();
 }
 
-interface TaskStopRequest {
+interface TaskIdRequest {
     task_id: string;
 }
 
@@ -90,11 +90,16 @@ export async function taskStop(ctx: Koa.ParameterizedContext) {
         "task_id": "task_id cannot be null",
     })) return;
 
-    let jsonRequest = ctx.jsonRequest as TaskStopRequest;
+    let jsonRequest = ctx.jsonRequest as TaskIdRequest;
     let task = taskProvider.getActiveTask(jsonRequest.task_id);
 
     if (!task) {
-        ctx.basicResponse.BadRequest({ info: `task_id ${jsonRequest.task_id} is not an active task.` });
+        ctx.basicResponse.BadRequest({
+            info: `TaskNotActive`,
+            info_args: {
+                task_id: jsonRequest.task_id
+            }
+        });
         return;
     }
 
@@ -107,5 +112,76 @@ export async function taskStop(ctx: Koa.ParameterizedContext) {
     }
 
     await task.stop();
+    ctx.basicResponse.OK();
+}
+
+export async function taskResume(ctx: Koa.ParameterizedContext) {
+    let user = await checkLogin(ctx);
+    if (user == null) return;
+
+    if (checkRequest(ctx, {
+        "task_id": "task_id cannot be null",
+    })) return;
+
+    let jsonRequest = ctx.jsonRequest as TaskIdRequest;
+
+    let taskDb = getManager().getRepository(Task);
+    let task = await taskDb.findOne(jsonRequest.task_id);
+
+    if (!task) {
+        ctx.basicResponse.BadRequest({
+            info: "NoThisTask",
+            info_args: {
+                task_id: jsonRequest.task_id
+            }
+        });
+        return;
+    }
+
+    await taskProvider.resumeTask(task);
+
+    ctx.basicResponse.OK();
+}
+
+interface TaskDeleteRequest {
+    task_id: string;
+    delete_file: string;
+}
+
+export async function taskDelete(ctx: Koa.ParameterizedContext) {
+    let user = await checkLogin(ctx);
+    if (user == null) return;
+
+    if (checkRequest(ctx, {
+        "task_id": "task_id cannot be null",
+    })) return;
+
+    let jsonRequest = ctx.jsonRequest as TaskDeleteRequest;
+
+    const taskDb = getManager().getRepository(Task);
+    const task = await taskDb.findOne(jsonRequest.task_id);
+
+    if (!task) {
+        ctx.basicResponse.BadRequest({
+            info: "NoThisTask",
+            info_args: {
+                task_id: jsonRequest.task_id
+            }
+        });
+        return;
+    }
+
+    //删除磁盘上的文件
+    if (jsonRequest.delete_file) {
+        try {
+            fs.rmSync(task.output_path);
+        } catch (error) {
+            //这里报错说明不存在文件，不予理会即可
+        }
+    }
+
+    //删除数据库
+    await getConnection().createQueryBuilder().delete().from(Task).where("task_id = :task_id", {task_id: jsonRequest.task_id}).execute();
+
     ctx.basicResponse.OK();
 }

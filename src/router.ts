@@ -4,10 +4,11 @@ import * as Router from 'koa-router';
 import { userList } from './controllers/UserController';
 import { systemInit, getSystemConfig, updateSystemConfig } from './controllers/SystemController';
 import { taskPre } from './controllers/task/taskPreController';
-import { taskAdd, taskStop } from './controllers/task/taskAddController';
+import { taskAdd, taskDelete, taskResume, taskStop } from './controllers/task/taskAddController';
 import { taskNow } from './controllers/task/taskNowController';
 import { taskInput } from './controllers/task/taskInputController';
-import { addCategory, getCategory } from './controllers/CategoryController';
+import { addCategory, deleteCategory, editCategory, getCategory } from './controllers/CategoryController';
+import { taskList } from './controllers/task/taskListController';
 
 // User
 let user = new Router();
@@ -17,14 +18,19 @@ user.post('/list', userList);
 let category = new Router();
 category.post('/add', addCategory);
 category.post('/get', getCategory);
+category.post('/edit', editCategory);
+category.post('/delete', deleteCategory);
 
 // Task
 let task = new Router();
 task.post('/add', taskAdd);
 task.post('/stop', taskStop);
+task.post('/resume', taskResume);
+task.post('/delete', taskDelete);
 task.post('/preadd', taskPre);
 task.post('/now', taskNow);
 task.post('/input', taskInput);
+task.post('/list', taskList);
 
 // System
 let system = new Router();

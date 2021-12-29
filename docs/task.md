@@ -106,19 +106,19 @@ MinyamiOptions:
 |proxy        |string    |Use the specified HTTP/HTTPS/SOCKS5 proxy. eg. "socks5://127.0.0.1:7890"
 |verbose      |boolean   |Output debug information to log
 
-4. 暂停任务
-
-Endpoint: `task/pause`
-
-Permission: `TaskOperate` on `Scope`
-
-5. 继续任务
+4. 继续任务
 
 Endpoint: `task/resume`
 
 Permission: `TaskOperate` on `Scope`
 
-6. 终止任务
+Parameters:
+
+|Name         |Type      |Desc
+|:------------|:---------|:---------------
+|task_id      |string    |待恢复任务的task_id
+
+5. 暂停/终止任务
 
 Endpoint: `task/stop`
 
@@ -130,19 +130,59 @@ Parameters:
 |:------------|:---------|:---------------
 |task_id      |string    |待终止任务的task_id
 
-7. 删除任务
+6. 删除任务
 
-Endpoint: `task/del`
+Endpoint: `task/delete`
 
 Permission: `TaskOperate` on `Scope`
 
-8. 任务列表
+Parameters:
+
+|Name         |Type      |Desc
+|:------------|:---------|:---------------
+|task_id      |string    |待终止任务的task_id
+|delete_file  |boolean   |是否同时删除文件（true-同时删除文件 false-保留磁盘上的文件，仅删除数据库记录）
+
+7. 任务列表
 
 Endpoint: `task/list`
 
 Permission: `TaskList` on `Scope`
 
-9. 正在进行中的任务列表
+Parameters: 
+
+|Name         |Type          |Desc
+|:------------|:-------------|:---------------
+|category     |string        |待查询的分类ID，留空为查询全部
+|page_num     |number        |当前页码，默认为1
+|page_size    |number        |每页条目数，默认为50
+
+Returns:
+
+|Name         |Type          |Desc
+|:------------|:-------------|:---------------
+|error        |number        |0-Ok
+|info         |string        |Extra information
+|info_args    |object        |Supplement of extra information
+|data         |TaskInfo[]    |任务信息
+|sum_rows     |number        |总条数（用于计算总页码）
+
+- TaskInfo:
+    |Name         |Type      |Desc
+    |:------------|:---------|:---------------
+    |task_id      |string    |任务ID
+    |status       |number    |下载状态（0-Init 1-Downloading 2-Paused 3-Merging 4-Completed 5-Error）
+    |is_live      |boolean   |是否为直播
+    |filename     |string    |任务名称
+    |output_path  |string    |保存路径
+    |source_url   |string    |M3U8 URL
+    |category     |string    |分类
+    |category_name|string    |分类名称
+    |date_create  |Date      |创建时间
+    |date_update  |Date      |最后更新时间
+    |description  |string    |描述
+
+8. 正在进行中的任务列表
 
 Endpoint: `task/now`
 

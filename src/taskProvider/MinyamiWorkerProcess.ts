@@ -10,7 +10,7 @@ class Minyami {
         this.downloader = null;
     }
 
-    async init(options: TaskInitOptions) {
+    async init(options: TaskInitOptions, resume: boolean = false) {
         this.isLive = options.isLive;
 
         if (options.isLive) {
@@ -25,11 +25,19 @@ class Minyami {
                 output: options.output,
                 cliMode: false
             });
-            this.downloader = new ArchiveDownloader(options.sourceUrl, {
-                ...options.options,
-                output: options.output,
-                cliMode: false
-            });
+
+            if (resume) {
+                this.downloader = new ArchiveDownloader(undefined, {
+                    ...options.options,
+                    cliMode: false
+                });
+            } else {
+                this.downloader = new ArchiveDownloader(options.sourceUrl, {
+                    ...options.options,
+                    output: options.output,
+                    cliMode: false
+                });
+            }
         }
 
         this.downloader.on("chunk-downloaded", (currentChunkInfo: ChunkDownloadedArgs) => {
@@ -74,11 +82,14 @@ class Minyami {
             });
         });
 
-        if (!options.isLive) {
-            await this.downloader.init();
+        if (resume) {
+            (<ArchiveDownloader>this.downloader).resume(options.sourceUrl);
+        } else {
+            if (!options.isLive) {
+                await this.downloader.init();
+            }
+            this.downloader.download();
         }
-
-        this.downloader.download();
     }
 
     async stop() {
@@ -88,7 +99,7 @@ class Minyami {
             } else {
                 await (<ArchiveDownloader>this.downloader).clean();
                 process.send({
-                    action: "finished"
+                    action: "paused"
                 });
             }
         }
@@ -103,9 +114,12 @@ function main() {
         if (taskAction.action === "taskInit") {
             console.log(`[MinyamiWorker ${process.pid}] 收到初始化任务指令`);
             minyami.init(taskAction.param);
-        } else if (taskAction.action === "taskStop"){
+        } else if (taskAction.action === "taskStop") {
             console.log(`[MinyamiWorker ${process.pid}] 收到停止任务指令`);
             minyami.stop();
+        } else if (taskAction.action === "taskResume") {
+            console.log(`[MinyamiWorker ${process.pid}] 收到恢复任务指令`);
+            minyami.init(taskAction.param, true);
         }
     });
 }

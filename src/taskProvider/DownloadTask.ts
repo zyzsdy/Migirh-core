@@ -66,13 +66,8 @@ export class DownloadTask {
             cmd: 3
         });
     }
-    async start() {
+    async start(resume: boolean = false) {
         try {
-            if (this.status !== 0) {
-                this.logger.error("The task can't be started due to current status.");
-                throw new Error("The task can't be started due to current status.");
-            }
-
             this.status = 1;
 
             //update db
@@ -84,15 +79,29 @@ export class DownloadTask {
                 env: envObj
             });
 
-            this.worker.send({
-                action: "taskInit",
-                param: {
-                    isLive: this.isLive,
-                    sourceUrl: this.sourceUrl,
-                    output: this.output,
-                    options: this.options
-                }
-            });
+            console.log(`DEBUG: pid ${this.worker.pid}`);
+
+            if (resume) {
+                this.worker.send({
+                    action: "taskResume",
+                    param: {
+                        isLive: false,
+                        sourceUrl: this.sourceUrl,
+                        output: this.output,
+                        options: this.options
+                    }
+                });
+            } else {
+                this.worker.send({
+                    action: "taskInit",
+                    param: {
+                        isLive: this.isLive,
+                        sourceUrl: this.sourceUrl,
+                        output: this.output,
+                        options: this.options
+                    }
+                });
+            }
 
             this.worker.on("message", (taskReply: TaskReply) => {
                 if (taskReply.action === "chunkDownloaded") {
@@ -107,6 +116,8 @@ export class DownloadTask {
                     this.onMergeError(taskReply.param);
                 } else if (taskReply.action === "criticalError") {
                     this.onCriticalError(taskReply.param);
+                } else if (taskReply.action === "paused") {
+                    this.onPaused();
                 }
             });
 
@@ -223,6 +234,15 @@ export class DownloadTask {
                 message: loggerLine
             }
         });
+
+        await sleep(1000);
+        this.worker.kill();
+    }
+
+    async onPaused() {
+        let loggerLine = `User Paused.`;
+        this.logger.info(loggerLine);
+        console.log(loggerLine);
 
         await sleep(1000);
         this.worker.kill();

@@ -27,7 +27,12 @@ interface TaskStopAction {
     action: "taskStop"
 }
 
-export type TaskAction = TaskInitAction | TaskStopAction;
+interface TaskResumeAction {
+    action: "taskResume",
+    param: TaskInitOptions
+}
+
+export type TaskAction = TaskInitAction | TaskStopAction | TaskResumeAction;
 
 export interface ChunkDownloadedArgs {
     taskname: string;
@@ -69,5 +74,9 @@ interface CriticalErrorTaskReply {
     param: Error;
 }
 
+interface PausedTaskReply {
+    action: "paused"
+}
+
 export type TaskReply = ChunkDownloadedTaskReply | ChunkErrorTaskReply | DownloadedTaskReply | 
-                        FinishedTaskReply | MergeErrorTaskReply | CriticalErrorTaskReply;
+                        FinishedTaskReply | MergeErrorTaskReply | CriticalErrorTaskReply | PausedTaskReply;

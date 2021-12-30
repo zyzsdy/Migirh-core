@@ -69,3 +69,15 @@ export async function updateSystemConfig(ctx: Koa.ParameterizedContext) {
 
     ctx.basicResponse.OK();
 }
+
+export async function getAboutVersion(ctx: Koa.ParameterizedContext) {
+    const packageJson = require('../../package.json');
+    const minyamiPackageJson = require('../../node_modules/minyami/package.json');
+
+    ctx.basicResponse.OK({
+        data: {
+            minyami_version: minyamiPackageJson.version,
+            core_version: packageJson.version
+        }
+    });
+}

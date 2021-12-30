@@ -1,8 +1,10 @@
 import * as Koa from 'koa';
+import { MinyamiOptions } from '../../taskProvider/MinyamiWorkerMessage';
 import { checkLogin } from '../../functions/checkLogin';
 import taskProvider from '../../taskProvider/TaskProvider';
+import { Log } from '../../taskProvider/taskLogger';
 
-interface TaskBasicInfo {
+export interface TaskBasicInfo {
     task_id: string;
     status?: number;
     is_live?: boolean;
@@ -10,6 +12,7 @@ interface TaskBasicInfo {
     output_path?: string;
     source_url?: string;
     category?: string;
+    category_name?: string;
     date_create?: Date;
     date_update?: Date;
     description?: string;
@@ -18,6 +21,8 @@ interface TaskBasicInfo {
     chunk_speed?: string;
     ratio_speed?: string;
     eta?: string;
+    minyami_options?: MinyamiOptions,
+    logger?: Log[]
 }
 
 export async function taskNow(ctx: Koa.ParameterizedContext) {
@@ -39,12 +44,39 @@ export async function taskNow(ctx: Koa.ParameterizedContext) {
             total_chunk_count: t.totalChunksCount,
             chunk_speed: t.chunkSpeed,
             ratio_speed: t.ratioSpeed,
-            eta: t.eta
+            eta: t.eta,
+            minyami_options: t.options
         }
         return taskBasicInfo;
     });
 
     ctx.basicResponse.OK({
         data: result
+    });
+}
+
+interface TaskIdRequest {
+    task_id: string;
+}
+
+export async function taskNowLog(ctx: Koa.ParameterizedContext) {
+    let user = await checkLogin(ctx);
+    if (user == null) return;
+
+    let jsonRequest = ctx.jsonRequest as TaskIdRequest;
+    let task = taskProvider.getActiveTask(jsonRequest.task_id);
+
+    if (!task) {
+        ctx.basicResponse.BadRequest({
+            info: `TaskNotActive`,
+            info_args: {
+                task_id: jsonRequest.task_id
+            }
+        });
+        return;
+    }
+
+    ctx.basicResponse.OK({
+        logger: task.logger.logger
     });
 }

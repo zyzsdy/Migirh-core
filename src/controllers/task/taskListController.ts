@@ -3,20 +3,8 @@ import Category from '../../models/Category';
 import { getManager } from 'typeorm';
 import { checkLogin } from '../../functions/checkLogin';
 import Task from '../../models/Task';
-
-interface TaskBasicInfo {
-    task_id: string;
-    status?: number;
-    is_live?: boolean;
-    filename?: string;
-    output_path?: string;
-    source_url?: string;
-    category?: string;
-    category_name?: string;
-    date_create?: Date;
-    date_update?: Date;
-    description?: string;
-}
+import { TaskBasicInfo } from './taskNowController';
+import { MinyamiOptions } from '../../taskProvider/MinyamiWorkerMessage';
 
 interface TaskListRequest {
     category?: string; //cate_id
@@ -61,7 +49,8 @@ export async function taskList(ctx: Koa.ParameterizedContext) {
             category: t.category,
             date_create: t.date_create,
             date_update: t.date_update,
-            description: t.description
+            description: t.description,
+            minyami_options: JSON.parse(t.download_options) as MinyamiOptions || {}
         }
 
         if (cateNameMap.has(tbi.category)){

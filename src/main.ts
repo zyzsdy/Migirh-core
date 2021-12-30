@@ -12,7 +12,7 @@ import basicResponse from './utils/basicResponse';
 import { wsEntry } from './websocket/WsServer'
 import envInit from "./functions/envInit";
 import errorHandler from "./utils/errorHandler";
-
+import rewrite from "./utils/rewrite";
 
 async function startApp() {
     await dbConn;
@@ -22,7 +22,9 @@ async function startApp() {
     const port: number = config.httpPort;
 
     const home = serve(config.frontendStaticServeDir);
+    const rewriteApi = rewrite(config.frontendStaticServeDir);
 
+    app.use(rewriteApi);
     app.use(home); //serve static files
     app.use(errorHandler); //add error handler
     app.use(basicResponse); //add ctx simple response methods
